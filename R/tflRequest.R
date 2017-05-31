@@ -31,7 +31,7 @@ tflRequest <- function(request,
     }
     # Check if arguments are required, and if all arguments are provided.  
    # if(length(args != 0L) && !is.na(as.data.table(request_table)[request_name == request, args])){
-     if(length(args) != length(as.data.table(request_table)[request_name == request, args])){
+     if(length(args) != length(as.data.table(request_table)[request_name == request, args][[1]])){
         stop(paste0("[tflRequest:: Missing Arguments]\nRequest: \"", request, 
           "\"\nRequires argument(s): \"",
           paste0(as.data.table(request_table)[request_name == request, args], collapse = ", ") 
