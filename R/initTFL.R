@@ -2,7 +2,7 @@
 #' @description 
 #' \code{initTFL} connects the API and creates local tables
 #' @importFrom jsonlite fromJSON
-#' @importFrom data.table as.data.table data.table fwrite fread
+#' @importFrom data.table as.data.table data.table fwrite fread rbindlist
 #' @param updateAPIKey Boolean - Update stored API Key?
 #' @param updateLocalData Boolean - Update stored data?
 #' @export
@@ -34,6 +34,10 @@ app_key = api_table$app_key
 
 ### Update Local Data required for Routing
 if(updateRoutes() == TRUE | updateLocalData == TRUE){
+  ### User Settings - currently hardcoded
+  user_set_mode = "overground"
+  
+  ### Initialise Routes & Lines for given Mode
   all_routes = tflRequest(request = "all routes", 
     app_id = app_id, 
     app_key = app_key, 
@@ -48,6 +52,24 @@ if(updateRoutes() == TRUE | updateLocalData == TRUE){
     rbind(as.data.table(all_routes$routeSections)[, .('stationName' = originationName, 'ID' = originator)],
       as.data.table(all_routes$routeSections)[, .('stationName' = destinationName, 'ID' = destination)])
     )
+  
+  ### Create the actual mapping required 
+  for(line_num in 1:length(all_lines))
+  print(paste0("Creating Underground Mapping for line(s): ",all_lines[line_num]))
+  station_mapping = unique(rbindlist(lapply(route_stations$ID, function(x){
+    return(
+      tflRequest(request = "stopPoints by line station", 
+                               app_id = app_id, 
+                               app_key = app_key, 
+                               args = list("Line" = as.character(all_lines[line_num]), 
+                                          "StopPoint" = x))
+        )
+  }))[, .("mode" = user_set_mode,
+          "line" = all_lines[line_num],
+          "station_name" = name, 
+          "naptan_code" = id)])
+  print(paste0("Writing Station Mapping. Discovered ", nrow(station_mapping), " stations."))
+  fwrite(as.data.table(station_mapping), file = "~/.hfittR/station_db.csv")
   fwrite(as.data.table(all_lines), file = "~/.hfittR/all_lines.csv")
   fwrite(as.data.table(route_stations), file=  "~/.hfittR/route_stations.csv")
 }
