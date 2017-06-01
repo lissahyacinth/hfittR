@@ -11,4 +11,8 @@ Imports:
   data.table,
   jsonlite,
   devtools
+Suggests: 
+  knitr, 
+  rmarkdown
+VignetteBuilder: knitr
 RoxygenNote: 6.0.1
