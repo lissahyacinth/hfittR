@@ -7,13 +7,13 @@
 tflRequest(request, app_id, app_key, args = list())
 }
 \arguments{
+\item{request}{Written request, e.g "all lines"}
+
 \item{app_id}{TfL App ID}
 
 \item{app_key}{App Key}
 
 \item{args}{2D list of arguments to be supplied to the request, e.g. list("Mode" = "underground")}
-
-\item{url}{- Origin URL}
 }
 \description{
 \code{tflRequest} returns a JSON object

@@ -41,5 +41,4 @@
 #   )
 # 
 # 
-# save(file = "data/request_table.rda", request_table)
-# save(file = "data/argument_table.rda", argument_table)
+# devtools::use_data(request_table, argument_table, internal = TRUE, overwrite = T)

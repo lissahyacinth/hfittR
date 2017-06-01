@@ -1,7 +1,7 @@
 #' @title Request a JSON object from TfL
 #' @description 
 #' \code{tflRequest} returns a JSON object
-#' @param url - Origin URL 
+#' @param request Written request, e.g "all lines"
 #' @param app_id TfL App ID
 #' @param app_key App Key
 #' @param args 2D list of arguments to be supplied to the request, e.g. list("Mode" = "underground")
@@ -30,7 +30,6 @@ tflRequest <- function(request,
         app_key = app_key)
     }
     # Check if arguments are required, and if all arguments are provided.  
-   # if(length(args != 0L) && !is.na(as.data.table(request_table)[request_name == request, args])){
      if(length(args) != length(as.data.table(request_table)[request_name == request, args][[1]])){
         stop(paste0("[tflRequest:: Missing Arguments]\nRequest: \"", request, 
           "\"\nRequires argument(s): \"",
@@ -43,6 +42,6 @@ tflRequest <- function(request,
                   expression = as.character(args[x]))
         jsonURL = gsub(x = jsonURL, pattern = paste0("\\{", names(args[x]), "\\}"), replacement = args[[x]])
       }
-  #  }
-    return(fromJSON(jsonURL))
+    api_resp = tflAPI(formatted_url = jsonURL)
+    return(api_resp)
   }

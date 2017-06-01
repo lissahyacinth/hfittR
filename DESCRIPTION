@@ -5,14 +5,16 @@ Authors@R: person("Lissa", "Hyacinth", email = "lissahyacinth@gmail.com",
                   role = c("aut", "cre"))
 Description: Imports TFL Data, and compares Actual to Forecasted Tube Performance.
 Depends: R (>= 3.1.0)
-License: MIT
-Imports: 
+License: MIT + file LICENSE
+Imports:
   Metrics,
   data.table,
   jsonlite,
-  devtools
-Suggests: 
+  devtools,
+  httr
+Suggests:
   knitr, 
-  rmarkdown
+  rmarkdown,
+  testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
