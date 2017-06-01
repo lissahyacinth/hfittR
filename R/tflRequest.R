@@ -39,8 +39,8 @@ tflRequest <- function(request,
       }
       # Check if arguments required are (roughly) correct
       for(x in 1:length(args)){
-        checkArgs(argument = names(args[x]), 
-                  expression = args[x])
+        checkArgs(argument = as.character(request_table[request_name == request, args][[1]][x]), 
+                  expression = as.character(args[x]))
         jsonURL = gsub(x = jsonURL, pattern = paste0("\\{", names(args[x]), "\\}"), replacement = args[[x]])
       }
   #  }

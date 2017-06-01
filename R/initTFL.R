@@ -16,19 +16,8 @@ initTFL <- function(
 if(!dir.exists("~/.hfittR")){
   dir.create("~/.hfittR")
 }
-if((!exists("api_table") & !file.exists("~/.hfittR/api_table.csv")) || updateAPIKey == TRUE){
-  print("No TfL API Details Found, please enter below:")
-  app_id <- readline("App ID:")
-  app_key <- readline("App Key:")
-  api_table <- data.frame(
-    "app_id" = app_id, 
-    "app_key" = app_key)
-  fwrite(api_table, file = "~/.hfittR/api_table.csv", row.names = FALSE)
-}else{
-  if(!exists("api_table")){
-    api_table = fread("~/.hfittR/api_table.csv")
-  }
-}
+# Read/Create API Info
+api_table <- apiInfo(updateAPIKey = updateAPIKey)
 app_id = api_table$app_id
 app_key = api_table$app_key
 
@@ -41,11 +30,11 @@ if(updateRoutes() == TRUE | updateLocalData == TRUE){
   all_routes = tflRequest(request = "all routes", 
     app_id = app_id, 
     app_key = app_key, 
-    args = list("Mode" = "overground"))
+    args = list("Mode" = user_set_mode))
   all_lines =  data.table("lines" = tflRequest(request = "all lines", 
    app_id = app_id, 
    app_key = app_key, 
-   args = list("Mode" = "overground"))$id)
+   args = list("Mode" = user_set_mode))$id)
 
   route_stations =
   unique(
@@ -74,3 +63,5 @@ if(updateRoutes() == TRUE | updateLocalData == TRUE){
   fwrite(as.data.table(route_stations), file=  "~/.hfittR/route_stations.csv")
 }
 }
+
+
