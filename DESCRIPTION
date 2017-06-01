@@ -1,0 +1,18 @@
+Package: hfittR
+Title: How Fricked is the Tube
+Version: 0.1
+Authors@R: person("Lissa", "Hyacinth", email = "lissahyacinth@gmail.com",
+                  role = c("aut", "cre"))
+Description: Imports TFL Data, and compares Actual to Forecasted Tube Performance.
+Depends: R (>= 3.1.0)
+License: MIT
+Imports: 
+  Metrics,
+  data.table,
+  jsonlite,
+  devtools
+Suggests: 
+  knitr, 
+  rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
