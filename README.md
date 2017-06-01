@@ -1,9 +1,17 @@
 # hfittR - How Fricked is the Tube?
 
+[![Travis-CI Build Status](https://travis-ci.org/lissahyacinth/hfittR.svg?branch=master)](https://travis-ci.org/lissahyacinth/hfittR)
+
 hfittR comprises of an API for using the [TfL Unified API](https://api.tfl.gov.uk/) in R without the issues introduced by directly calling JSON URLs, and a forecasting package to determine current delays in underground activity compared to forecasted normal activity. 
 
 ## Current Status 
 In process of building the API out to a workable form.
+
+## Installation
+```R
+require(devtools)
+install_github("lissahyacinth/hfittR", ref = "api")
+```
 
 ### API 
 ```InitTFL()``` 
@@ -15,6 +23,17 @@ This is going to be a SQL storage done within R and SQLLite.
 
 ### Forecasting - Not Started
 Using a BSTS model with a Causal Impact model to interpret the difference in predicted/actual performance for periods of recorded time.
+
+### Basic Usage
+```R
+library(hfittR)
+api_table <- hfittR:::apiInfo(updateAPIKey = FALSE)
+app_id = api_table$app_id
+app_key = api_table$app_key
+tflDf <- tflRequest(app_id = app_id, 
+                    app_key = app_key, 
+                    request = "all line arrivals", args = list("Line"= "london-overground"))
+```
 
 ### Possible Queries
 
@@ -39,6 +58,10 @@ The order of ownership (seems) to roughly work as follows, as a StopPoint belong
 |----------------------------|-----------------|-----------------------------------------------------------------------|
 | all routes                 | Mode            | Return all routes for that Mode                                       |
 | all lines                  | Mode            | Return all lines for that Mode (Victoria, Circle, etc)                |
+| all line arrivals          | Line            | Return all arrival data for that Line                                 |
+| route section              | StopPoint       | Return Route Sections accessible from that StopPoint                  |
 | all modes                  |                 | Return all possible modes                                             |
 | route section              | StopPoint       | Return Route Sections accessible from that StopPoint                  |
+| arrival prediction         | StopPoint       | Return arrival prediction for that StopPoint                          |
 | stopPoints by line station | StopPoint, Line | Return all StopPoints accessible from that StopPoint on provided Line |
+| timetable from A to B      | StopPointA,StopPointB, Line| Return all schedules for trips between A and B on provided Line       |
