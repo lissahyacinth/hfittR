@@ -5,21 +5,20 @@
 hfittR comprises of an API for using the [TfL Unified API](https://api.tfl.gov.uk/) in R without the issues introduced by directly calling JSON URLs, and a forecasting package to determine current delays in underground activity compared to forecasted normal activity. 
 
 ## Current Status 
-In process of building the API out to a workable form.
+Building a series of workers to reliably gather data from TFL and store it locally. Current iteration is pure R, but will be expanding into Ruby to do process control & management. 
 
 ## Installation
 ```R
 require(devtools)
-install_github("lissahyacinth/hfittR", ref = "api")
+install_github("lissahyacinth/hfittR")
 ```
 
 ### API 
 ```InitTFL()``` 
-Create local directory ```~\.hfittr``` to store API information, and (currently) the tube map. Will take in an APP Key and APP ID. 
+Create local directory ```~\.hfittr``` to store API information, and builds the tube mapping for all lines. Will take in an APP Key and APP ID. Can be forced with ```InitTFL(updateLocalData = TRUE)```, but takes a few minutes to complete as it determines all endpoints for the tube, then all points along those endpoints. Used for Fuzzy Matching Naptan IDs back to station names.
 
 ### Data Storage - Not Started
-The core issue behind hfittR is that there is not a general store for historical Tube performance, and so there needs to be a worker that collects data for however long is required before estimates can be made into 'how fricked is the tube anyway?'. 
-This is going to be a SQL storage done within R and SQLLite. 
+Storing data using SQLite on a local directory. 
 
 ### Forecasting - Not Started
 Using a BSTS model with a Causal Impact model to interpret the difference in predicted/actual performance for periods of recorded time.
