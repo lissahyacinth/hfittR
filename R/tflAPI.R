@@ -8,16 +8,25 @@
 tflAPI <- function(formatted_url){
   timeouts = 0
   while(timeouts < 3){
-    resp <- GET(formatted_url)
-    if(http_type(resp) != "application/json"){
+    resp <- tryCatch({
+      GET(formatted_url)
+    }, error = function(e){
+      timeouts <<- timeouts + 1
+      sprintf("[tflAPI:: Request Timed Out, Request %s of 3]", 
+              as.character(timeouts))
+      return(0L)
+    })
+    if(typeof(resp) == "list"){
+      if(http_type(resp) != "application/json"){
       stop("[tflAPI:: API did not return json]", call. = FALSE)
+      }
     }
-    timeouts <- timeouts + as.numeric(httrStatusCheck(resp = resp))
     if(timeouts == 0){
       return(fromJSON(content(resp, "text")))
     }
   }
-  stop("[tflAPI:: Operation Timed Out - Attempt 3]")
+  stop(sprintf("[tflAPI:: Operation Timed Out - Attempt %s of 3]", 
+               as.character(timeouts)))
 }
 
 
